@@ -22,15 +22,20 @@ const server = http.createServer((req, res) => {
    
 	// Get the Http Method
     const method = req.method.toLowerCase();
-
+    
+    // Get the headers as an object 
+   
+    let header = req.headers;
 	// send the response
 	res.end('hello world\n');
 	// log the request path
 	console.log(`해당 패스(path)로 유저의 요청이 왔습니다: 
     ${trimmedPath} with method: ${method}
    `);
-   console.log(parsedUrl.query[Symbol.toPrimitive]);
-   console.log(parsedUrl.query);
+
+   console.log(parsedUrl.query); // { fizz: 'buzz' }
+   // log headers 
+   console.log(Object.entries(header));
 
 });
 
