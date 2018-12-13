@@ -17,14 +17,21 @@ const server = http.createServer((req, res) => {
 	const path = parsedUrl.pathname;
 	const trimmedPath = path.replace(/^\/+|\/+$/g, '');
 
+    // get the query string as an object 
+    // const queryObj = parsedUrl.query < 불가능 
+   
 	// Get the Http Method
-	const method = req.method.toLowerCase();
+    const method = req.method.toLowerCase();
 
 	// send the response
 	res.end('hello world\n');
 	// log the request path
 	console.log(`해당 패스(path)로 유저의 요청이 왔습니다: 
-    ${trimmedPath} with method: ${method}`);
+    ${trimmedPath} with method: ${method}
+   `);
+   console.log(parsedUrl.query[Symbol.toPrimitive]);
+   console.log(parsedUrl.query);
+
 });
 
 // start the server, and have it listen on port 3000
