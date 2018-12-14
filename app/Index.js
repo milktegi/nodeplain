@@ -7,6 +7,9 @@ primary file for the API
 const http = require('http');
 const url = require('url');
 
+// to parse payload 
+const StringDecoder = require('string_decoder').StringDecoder;
+
 // the server should respond to all requests with a string
 
 const server = http.createServer((req, res) => {
@@ -15,32 +18,39 @@ const server = http.createServer((req, res) => {
 
 	// get the path
 	const path = parsedUrl.pathname;
-	const trimmedPath = path.replace(/^\/+|\/+$/g, '');
+	const trimmedPath = path.replace(/^\/+|\/+$/g,'');
 
     // get the query string as an object 
     // const queryObj = parsedUrl.query < 불가능 
    
 	// Get the Http Method
     const method = req.method.toLowerCase();
+    const headers = req.headers;
     
-    // Get the headers as an object 
+ 
+   // get the payload, firstly pull an instance
+   let decoder = new StringDecoder('utf-8');
+   let buffer = '';
    
-    let header = req.headers;
-	// send the response
-	res.end('hello world\n');
-	// log the request path
-	console.log(`해당 패스(path)로 유저의 요청이 왔습니다: 
-    ${trimmedPath} with method: ${method}
-   `);
-
-   console.log(parsedUrl.query); // { fizz: 'buzz' }
-   // log headers 
-   console.log(Object.entries(header));
-
+   // on is for an event
+   req.on('data', function(data) {
+       // append the result to buffer
+       buffer += decoder.write(data);
+   })
+   
+   req.on('end', function(){
+       buffer += decoder.end();
+       
+       // send the response to end
+       res.end('hello world\n');
+       
+       // log the request path
+       console.log('req received with this payload: ', buffer);
+   })
+   
 });
 
 // start the server, and have it listen on port 3000
-
 server.listen(3001, () => {
 	console.log('the server is listening on port 3001 now');
 });
